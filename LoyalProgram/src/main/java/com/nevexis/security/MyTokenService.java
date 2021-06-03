@@ -20,6 +20,7 @@ public class MyTokenService extends BasicService {
 	private UserService userService;
 
 	private static final String SECURE_KEY = "KenanSecurity";
+	private static final String SPLITTER = "&@";
 	private static final long EXPIRATION_MS = 3_600_000l;
 	private static final SecureRandom random = new SecureRandom();
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -28,8 +29,8 @@ public class MyTokenService extends BasicService {
 		Date expirationDate = new Date((new Date()).getTime() + EXPIRATION_MS);
 
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(SECURE_KEY).append("&").append(username).append("&").append(formatter.format(expirationDate))
-				.append("&").append(random.nextLong());
+		buffer.append(SECURE_KEY).append(SPLITTER).append(username).append(SPLITTER).append(formatter.format(expirationDate))
+				.append(SPLITTER).append(random.nextLong());
 
 		return buffer.toString();
 	}
@@ -60,21 +61,21 @@ public class MyTokenService extends BasicService {
 		if (null == token) {
 			return null;
 		}
-		return token.split("&")[1];
+		return token.split(SPLITTER)[1];
 	}
 
 	public Date extractExpirationDate(String token) throws ParseException {
 		if (null == token) {
 			return null;
 		}
-		return formatter.parse(token.split("&")[2]);
+		return formatter.parse(token.split(SPLITTER)[2]);
 	}
 
 	public Long extractSecureKey(String token) {
 		if (null == token) {
 			return null;
 		}
-		return Long.parseLong(token.split("&")[3]);
+		return Long.parseLong(token.split(SPLITTER)[3]);
 	}
 
 	public int hashToken(String token) {
