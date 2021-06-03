@@ -1,7 +1,8 @@
 package com.nevexis.models;
 
 public enum RolesEnum {
-	ROLE_USER,
-    ROLE_MODERATOR,
-    ROLE_ADMIN
+	ROLE_CLIENT,
+	ROLE_MERCHANT,
+    ROLE_ADMIN,
+    ROLE_OWNER
 }

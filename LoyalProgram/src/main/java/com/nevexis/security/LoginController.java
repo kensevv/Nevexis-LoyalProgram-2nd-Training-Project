@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nevexis.services.UserService;
+
 @RestController
 public class LoginController {
 	@Autowired
@@ -18,18 +20,25 @@ public class LoginController {
 	private MyTokenService tokenService;
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
-	
+	@Autowired
+	private UserService userService;
+
 	@GetMapping("/login")
-	public ResponseEntity<?> login(@RequestParam String username,@RequestParam String password) {
+	public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
 		String myToken = new String();
 		
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-		if(null != userDetails && userDetails.getPassword().equals(password)) {
-			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-					userDetails.getUsername(), null, userDetails.getAuthorities());
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			myToken = tokenService.generateToken(username);
-			tokenService.persistToken(myToken);
+		
+		if (null != userDetails) {
+			if (passEncoder.matches(password, userDetails.getPassword())) {
+				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+						userDetails.getUsername(), null, userDetails.getAuthorities());
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+				myToken = tokenService.generateToken(username);
+				tokenService.persistToken(myToken);
+			} else {
+				userService.incrementFailedAttempts(userDetails.getUsername());
+			}
 		}
 		return ResponseEntity.ok(myToken);
 	}

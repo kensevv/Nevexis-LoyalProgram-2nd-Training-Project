@@ -20,7 +20,8 @@ public class User extends BaseEntity{
 	private String username;
 	@Column(nullable = false)
 	private String password;
-	private Boolean enabled;
+	private Boolean enabled = true;
+	private Integer failedAttempts = 0;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable( name = "users_roles" )
@@ -64,5 +65,13 @@ public class User extends BaseEntity{
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Integer getFailedAttempts() {
+		return failedAttempts;
+	}
+
+	public void setFailedAttempts(Integer failedAttempts) {
+		this.failedAttempts = failedAttempts;
 	}
 }

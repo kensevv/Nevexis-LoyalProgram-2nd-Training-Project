@@ -1,0 +1,3 @@
+1) -> FAILED_ATTEMPTS: if greater than 3 -> DENY ACCESS!
+2) -> SALES SERVICE:
+		1. MAKE SALE ();

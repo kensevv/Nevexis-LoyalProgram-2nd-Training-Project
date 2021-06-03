@@ -11,4 +11,9 @@ public class UserService extends BasicService {
 	public User getUserByUsername(String username) {
 		return em.createNamedQuery(getUserByUsername, User.class).setParameter("username", username).getSingleResult();
 	}
+	
+	public void incrementFailedAttempts(String username) {
+		User dbUser = getUserByUsername(username);
+		dbUser.setFailedAttempts(dbUser.getFailedAttempts() + 1);
+	}
 }
