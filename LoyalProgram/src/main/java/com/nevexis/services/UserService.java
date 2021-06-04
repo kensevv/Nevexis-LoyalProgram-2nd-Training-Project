@@ -16,4 +16,12 @@ public class UserService extends BasicService {
 		User dbUser = getUserByUsername(username);
 		dbUser.setFailedAttempts(dbUser.getFailedAttempts() + 1);
 	}
+	
+	public void resetFailedAttempts(String username) {
+		getUserByUsername(username).setFailedAttempts(0);
+	}
+	
+	public void registerUser(User user) {
+		
+	}
 }

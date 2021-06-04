@@ -11,7 +11,6 @@ import org.hibernate.annotations.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,7 +30,7 @@ public class MyTokenFilter extends OncePerRequestFilter {
 			if (tokenService.validateToken(myToken)) {
 				String username = tokenService.extractUsernameFromToken(myToken);
 
-				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+				UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(username);
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

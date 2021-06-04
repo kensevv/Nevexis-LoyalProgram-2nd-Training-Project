@@ -28,9 +28,9 @@ public class MyTokenService extends BasicService {
 	public String generateToken(String username) {
 		Date expirationDate = new Date((new Date()).getTime() + EXPIRATION_MS);
 
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(SECURE_KEY).append(SPLITTER).append(username).append(SPLITTER).append(formatter.format(expirationDate))
-				.append(SPLITTER).append(random.nextLong());
+		StringBuffer buffer = new StringBuffer(50);
+		buffer.append(SECURE_KEY).append(SPLITTER).append(username).append(SPLITTER)
+				.append(formatter.format(expirationDate)).append(SPLITTER).append(random.nextLong());
 
 		return buffer.toString();
 	}
@@ -45,11 +45,12 @@ public class MyTokenService extends BasicService {
 		}
 		return false;
 	}
-	
+
 	private boolean tokenExistsInDb(String token) {
 		UserAuthToken dbAuth = em.find(UserAuthToken.class, hashToken(token));
 		return dbAuth != null;
 	}
+
 	private void setTokenExpired(String token) {
 		UserAuthToken auth = em.find(UserAuthToken.class, hashToken(token));
 		if (null != auth) {
@@ -58,23 +59,14 @@ public class MyTokenService extends BasicService {
 	}
 
 	public String extractUsernameFromToken(String token) {
-		if (null == token) {
-			return null;
-		}
 		return token.split(SPLITTER)[1];
 	}
 
 	public Date extractExpirationDate(String token) throws ParseException {
-		if (null == token) {
-			return null;
-		}
 		return formatter.parse(token.split(SPLITTER)[2]);
 	}
 
 	public Long extractSecureKey(String token) {
-		if (null == token) {
-			return null;
-		}
 		return Long.parseLong(token.split(SPLITTER)[3]);
 	}
 
@@ -82,9 +74,9 @@ public class MyTokenService extends BasicService {
 		return token.hashCode();
 	}
 
-	public void persistToken(String token) {
-		UserAuthToken authentication = new UserAuthToken(hashToken(token),
-				userService.getUserByUsername(extractUsernameFromToken(token)), AuthStatus.VALID);
-		em.persist(authentication);
+	public void persistToken(String token) throws ParseException {
+		UserAuthToken userAuthToken = new UserAuthToken(hashToken(token),
+				userService.getUserByUsername(extractUsernameFromToken(token)), extractExpirationDate(token), new Date(), AuthStatus.VALID);
+		em.persist(userAuthToken);
 	}
 }
