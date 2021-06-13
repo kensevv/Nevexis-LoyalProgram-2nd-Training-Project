@@ -33,4 +33,11 @@ public class TestController {
 	public String helloOwner() {
 		return "HELLO OWNER!";
 	}
+	
+	@GetMapping("/kenan")
+	@PreAuthorize("@securityService.userIsKenan()")
+	//@PreAuthorize("@securityService.userIsKenan(#saleId)")
+	public String helloKenan() {
+		return "HELLO KENAN";
+	}
 }
