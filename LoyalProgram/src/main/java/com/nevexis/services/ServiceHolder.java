@@ -19,4 +19,6 @@ public class ServiceHolder {
 	protected SalesService salesService;
 	@Autowired
 	protected RoleService rolesService;
+	@Autowired
+	protected ClientService clientService;
 }

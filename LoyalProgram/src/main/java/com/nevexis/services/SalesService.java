@@ -22,7 +22,7 @@ public class SalesService extends BasicService {
 	@Autowired
 	ClientService clientService;
 
-	public void makesale(String clientPhoneNumber, SaleDTO saleDTO) {
+	public Sale makesale(String clientPhoneNumber, SaleDTO saleDTO) {
 		Sale sale = new Sale(clientService.getCLientByPhone(clientPhoneNumber),
 				new java.sql.Date(System.currentTimeMillis()), saleDTO.getPrice(), null);
 
@@ -33,6 +33,7 @@ public class SalesService extends BasicService {
 		// addPointsInterceptor.invoke(sale);
 
 		em.persist(sale);
+		return sale;
 	}
 
 	public Double getFinalPrice(Sale sale) {
