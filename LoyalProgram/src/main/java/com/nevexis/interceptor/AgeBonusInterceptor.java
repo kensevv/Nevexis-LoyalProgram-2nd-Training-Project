@@ -7,7 +7,7 @@ import com.nevexis.models.Sale;
 import com.nevexis.services.ClientService;
 
 @Component("ageBonusInterceptor")
-public class AgeBonusInterceptor extends BaseInterceptor {
+public class AgeBonusInterceptor extends InterceptorImpl {
 	@Autowired
 	private ClientService clientService;
 
@@ -23,7 +23,7 @@ public class AgeBonusInterceptor extends BaseInterceptor {
 			return;
 		}
 		
-		makeSaleDiscount(sale, discountPercentage);
+		sale.setTotalDiscount(discountPercentage * sale.getPrice());
 	}
 
 	private Double getDiscount(Integer age) {

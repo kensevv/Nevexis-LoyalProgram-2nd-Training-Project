@@ -1,11 +1,14 @@
 package com.nevexis.services;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.nevexis.models.User;
 import com.nevexis.security.UserDetailsImpl;
 
 @Service
+@Transactional
 public class UserService extends BasicService {
 	private static final String getUserByUsername = "User.getUserByUsername";
 
@@ -20,10 +23,6 @@ public class UserService extends BasicService {
 
 	public void resetFailedAttempts(UserDetailsImpl userDetails) {
 		getUserByUsername(userDetails.getUsername()).setFailedAttempts(0);
-	}
-
-	public void registerUser(User user) {
-
 	}
 
 	public void disableUserIfLimitReached(UserDetailsImpl userDetails) {

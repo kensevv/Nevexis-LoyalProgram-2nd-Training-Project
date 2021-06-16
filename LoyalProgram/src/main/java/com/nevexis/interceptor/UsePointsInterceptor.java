@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.nevexis.models.Sale;
 
 @Component("usePointsInterceptor")
-public class UsePointsInterceptor extends BaseInterceptor {
+public class UsePointsInterceptor extends InterceptorImpl {
 
 	private final Double DISCOUNT_PER_POINT = 0.5;
 	

@@ -9,7 +9,7 @@ import com.nevexis.models.Sale;
 import com.nevexis.services.SalesService;
 
 @Component("addPointsInterceptor")
-public class AddPointsInterceptor extends BaseInterceptor {
+public class AddPointsInterceptor extends InterceptorImpl {
 	@Autowired
 	private SalesService salesService;
 

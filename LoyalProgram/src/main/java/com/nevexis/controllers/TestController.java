@@ -12,14 +12,18 @@ import com.nevexis.security.UserDetailsImpl;
 @RequestMapping("/hello")
 public class TestController {
 	
+	@GetMapping("/permission")
+	@PreAuthorize("hasAuthority('READ')")
+	public String helloPermission() {
+		return "YOU HAVE READ PERMISSION";
+	}
+	
 	@GetMapping("/admin")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String helloAdmin() {
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		
-		
 		
 		StringBuffer buffer = new StringBuffer();
 		
