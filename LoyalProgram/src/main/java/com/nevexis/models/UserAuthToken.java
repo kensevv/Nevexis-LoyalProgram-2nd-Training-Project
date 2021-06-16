@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 @Entity(name = "user_auth_token")
 public class UserAuthToken {
 	@Id
-	private Integer tokenHash;
+	private String encryptedToken;
 	@OneToOne
 	private User user;
 	private Date expirationDate;
@@ -22,8 +22,8 @@ public class UserAuthToken {
 	public UserAuthToken() {}
 	
 	
-	public UserAuthToken(Integer tokenHash, User user, Date expirationDate, Date issuedDate, AuthStatus status) {
-		this.tokenHash = tokenHash;
+	public UserAuthToken(String encryptedToken, User user, Date expirationDate, Date issuedDate, AuthStatus status) {
+		this.encryptedToken = encryptedToken;
 		this.user = user;
 		this.expirationDate = expirationDate;
 		this.issuedDate = issuedDate;
@@ -31,12 +31,12 @@ public class UserAuthToken {
 	}
 
 
-	public Integer getTokenHash() {
-		return tokenHash;
+	public String getTokenHash() {
+		return encryptedToken;
 	}
 
-	public void setTokenHash(Integer tokenHash) {
-		this.tokenHash = tokenHash;
+	public void setTokenHash(String encryptedToken) {
+		this.encryptedToken = encryptedToken;
 	}
 
 	public User getUser() {
