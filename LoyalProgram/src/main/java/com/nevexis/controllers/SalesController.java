@@ -20,7 +20,7 @@ public class SalesController {
 	
 	@GetMapping("/new")
 	@PreAuthorize("hasRole('ADMIN') OR hasRole('MERCHANT')")
-	public Sale makeSale(@RequestParam String clientPhoneNumber, @RequestBody SaleDTO saleDTO) {
-		return salesService.makesale(clientPhoneNumber, saleDTO);
+	public Sale makeSale(@RequestParam String clientPhoneNumber, @RequestBody SaleDTO saleDTO, @RequestParam Boolean usePoints) {
+		return salesService.makesale(clientPhoneNumber, saleDTO, usePoints);
 	}
 }
