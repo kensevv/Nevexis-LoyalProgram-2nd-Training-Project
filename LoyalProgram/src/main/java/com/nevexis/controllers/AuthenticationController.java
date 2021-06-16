@@ -24,22 +24,26 @@ public class AuthenticationController extends ServiceHolder {
 
 		UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
 
-		if (null != userDetails) {
+		if (null != userDetails && userService.accountIsEnabled(userDetails)) {
 			if (passEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
-				userService.resetFailedAttempts(loginRequest.getUsername());
+				userService.resetFailedAttempts(userDetails);
 
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 				myToken = tokenService.generateToken(loginRequest.getUsername());
 				tokenService.persistToken(myToken);
+				
+				HttpHeaders authorizationHeader = new HttpHeaders();
+				authorizationHeader.set("Authorization", myToken);
+				return new ResponseEntity<>(authorizationHeader, HttpStatus.OK);
 			} else {
-				userService.incrementFailedAttempts(userDetails.getUsername());
+				userService.incrementFailedAttempts(userDetails);
+				userService.disableUserIfLimitReached(userDetails);
+				return new ResponseEntity<>("Wrong credentials", HttpStatus.BAD_REQUEST);
 			}
 		}
-		HttpHeaders authorizationHeader = new HttpHeaders();
-		authorizationHeader.set("Authorization", myToken);
-		return new ResponseEntity<>(authorizationHeader, HttpStatus.OK);
+		return new ResponseEntity<>("Account DISABLED", HttpStatus.BAD_REQUEST);
 	}
 
 	/*

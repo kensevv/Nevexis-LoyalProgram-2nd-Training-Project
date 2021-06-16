@@ -3,6 +3,7 @@ package com.nevexis.services;
 import org.springframework.stereotype.Service;
 
 import com.nevexis.models.User;
+import com.nevexis.security.UserDetailsImpl;
 
 @Service
 public class UserService extends BasicService {
@@ -11,17 +12,28 @@ public class UserService extends BasicService {
 	public User getUserByUsername(String username) {
 		return em.createNamedQuery(getUserByUsername, User.class).setParameter("username", username).getSingleResult();
 	}
-	
-	public void incrementFailedAttempts(String username) {
-		User dbUser = getUserByUsername(username);
-		dbUser.setFailedAttempts(dbUser.getFailedAttempts() + 1);
+
+	public void incrementFailedAttempts(UserDetailsImpl userDetails) {
+		String username = userDetails.getUsername();
+		getUserByUsername(username).setFailedAttempts(getUserByUsername(username).getFailedAttempts() + 1);
 	}
-	
-	public void resetFailedAttempts(String username) {
-		getUserByUsername(username).setFailedAttempts(0);
+
+	public void resetFailedAttempts(UserDetailsImpl userDetails) {
+		getUserByUsername(userDetails.getUsername()).setFailedAttempts(0);
 	}
-	
+
 	public void registerUser(User user) {
-		
+
+	}
+
+	public void disableUserIfLimitReached(UserDetailsImpl userDetails) {
+		User dbUser = getUserByUsername(userDetails.getUsername());
+		if (dbUser.getFailedAttempts() == 3) {
+			dbUser.setEnabled(false);
+		}
+	}
+
+	public boolean accountIsEnabled(UserDetailsImpl userDetails) {
+		return getUserByUsername(userDetails.getUsername()).getEnabled();
 	}
 }
