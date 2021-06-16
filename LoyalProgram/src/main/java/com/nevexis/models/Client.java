@@ -3,6 +3,7 @@ package com.nevexis.models;
 import java.sql.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.NamedQuery;
 
@@ -14,14 +15,18 @@ public class Client extends BaseEntity{
 	private String lastName;
 	private String phone;
 	private Date birthdate;
+	
+	@ManyToOne
+	private LoyalCard loyalCard;
 
 	public Client() {}
 	
-	public Client(String firstName, String lastName, String phone, Date birthdate) {
+	public Client(String firstName, String lastName, String phone, Date birthdate, LoyalCard loyalCard) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phone = phone;
 		this.birthdate = birthdate;
+		this.loyalCard = loyalCard;
 	}
 
 	public String getFirstName() {
@@ -54,5 +59,13 @@ public class Client extends BaseEntity{
 
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
+	}
+
+	public LoyalCard getLoyalCard() {
+		return loyalCard;
+	}
+
+	public void setLoyalCard(LoyalCard loyalCard) {
+		this.loyalCard = loyalCard;
 	}
 }

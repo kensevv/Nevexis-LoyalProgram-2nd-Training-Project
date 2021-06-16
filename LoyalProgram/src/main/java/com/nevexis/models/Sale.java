@@ -12,6 +12,8 @@ public class Sale extends BaseEntity{
 	private Date date;
 	private Double price;
 	private Double totalDiscount;
+	private Double receivedPoints;
+	private Double usedPoints;
 	
 	public Sale() {}
 	
@@ -20,6 +22,17 @@ public class Sale extends BaseEntity{
 		this.date = date;
 		this.price = price;
 		this.totalDiscount = totalDiscount;
+	}
+
+	
+	public Sale(Client client, Date date, Double price, Double totalDiscount, Double receivedPoints,
+			Double usedPoints) {
+		this.client = client;
+		this.date = date;
+		this.price = price;
+		this.totalDiscount = totalDiscount;
+		this.receivedPoints = receivedPoints;
+		this.usedPoints = usedPoints;
 	}
 
 	public Client getClient() {
@@ -53,4 +66,21 @@ public class Sale extends BaseEntity{
 	public void setTotalDiscount(Double totalDiscount) {
 		this.totalDiscount = totalDiscount;
 	}
+
+	public Double getReceivedPoints() {
+		return receivedPoints;
+	}
+
+	public void setReceivedPoints(Double receivedPoints) {
+		this.receivedPoints = receivedPoints;
+	}
+
+	public Double getUsedPoints() {
+		return usedPoints;
+	}
+
+	public void setUsedPoints(Double usedPoints) {
+		this.usedPoints = usedPoints;
+	}
+	
 }
