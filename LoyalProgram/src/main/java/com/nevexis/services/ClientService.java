@@ -20,6 +20,7 @@ public class ClientService extends BasicService {
 		return em.createNamedQuery(getClientByPhone, Client.class).setParameter("phone", phoneNumber).getSingleResult();
 	}
 
+	@SuppressWarnings("deprecation")
 	public int getClientAge(Client client) {
 		return new Date(System.currentTimeMillis()).getYear() - client.getBirthdate().getYear();
 	}
