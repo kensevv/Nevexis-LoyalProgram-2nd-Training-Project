@@ -27,8 +27,8 @@ CREATE TABLE `client` (
   `first_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
-  `birthdate` date DEFAULT NULL,
   `loyal_card_id` bigint DEFAULT NULL,
+  `birthdate` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKbn3pdf82jm78fjn2pfcyxrch8` (`loyal_card_id`),
   CONSTRAINT `FKbn3pdf82jm78fjn2pfcyxrch8` FOREIGN KEY (`loyal_card_id`) REFERENCES `loyal_card` (`id`)
@@ -41,7 +41,7 @@ CREATE TABLE `client` (
 
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES (1,'Kenan','Yusein','0876617490','2000-06-05',1),(2,'Ivan','Tsonev','087679357','1997-03-01',2),(3,'Vesko','Mesko','0896356874','1990-01-01',3);
+INSERT INTO `client` VALUES (1,'Kenan','Yusein','0876617490',1,'2000-06-05 00:00:00.000000'),(2,'Ivan','Tsonev','087679357',2,'1980-01-01 00:00:00.000000'),(3,'Vesko','Mesko','0896356874',3,'1950-01-01 00:00:00.000000');
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -54,8 +54,8 @@ DROP TABLE IF EXISTS `loyal_card`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `loyal_card` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `points` double DEFAULT NULL,
   `tier` varchar(255) DEFAULT NULL,
+  `points` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -66,7 +66,7 @@ CREATE TABLE `loyal_card` (
 
 LOCK TABLES `loyal_card` WRITE;
 /*!40000 ALTER TABLE `loyal_card` DISABLE KEYS */;
-INSERT INTO `loyal_card` VALUES (1,18,'DIAMOND'),(2,12,'BRONZE'),(3,0,'SILVER');
+INSERT INTO `loyal_card` VALUES (1,'DIAMOND',9.00),(2,'BRONZE',0.00),(3,'SILVER',0.00);
 /*!40000 ALTER TABLE `loyal_card` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,16 +179,16 @@ DROP TABLE IF EXISTS `sale`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sale` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `date` date DEFAULT NULL,
-  `price` double DEFAULT NULL,
   `client_id` bigint DEFAULT NULL,
-  `total_discount` double DEFAULT NULL,
-  `received_points` double DEFAULT NULL,
-  `used_points` double DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `received_points` decimal(10,2) DEFAULT NULL,
+  `total_discount` decimal(10,2) DEFAULT NULL,
+  `used_points` decimal(10,2) DEFAULT NULL,
+  `date` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKon0o9ba5ajsnwivekhl1tfjiy` (`client_id`),
   CONSTRAINT `FKon0o9ba5ajsnwivekhl1tfjiy` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,7 +197,7 @@ CREATE TABLE `sale` (
 
 LOCK TABLES `sale` WRITE;
 /*!40000 ALTER TABLE `sale` DISABLE KEYS */;
-INSERT INTO `sale` VALUES (8,'2021-06-16',100,1,53.5,9,87),(9,'2021-06-16',100,1,14.5,9,9),(13,'2021-06-16',100,1,10,9,0);
+INSERT INTO `sale` VALUES (49,1,100.00,9.00,10.00,0.00,'2021-06-17 14:24:46.444936'),(50,1,100.00,9.00,28.00,36.00,'2021-06-17 14:25:16.924047'),(51,1,100.00,9.00,10.00,0.00,'2021-06-17 14:25:27.301679');
 /*!40000 ALTER TABLE `sale` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -240,10 +240,10 @@ DROP TABLE IF EXISTS `user_auth_token`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_auth_token` (
   `encrypted_token` varchar(255) NOT NULL,
-  `expiration_date` datetime(6) DEFAULT NULL,
-  `issued_date` datetime(6) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `user_id` bigint DEFAULT NULL,
+  `expiration_date` datetime(6) DEFAULT NULL,
+  `issued_date` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`encrypted_token`),
   KEY `FKsgoqgsfs8lfll3g069mei5l13` (`user_id`),
   CONSTRAINT `FKsgoqgsfs8lfll3g069mei5l13` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
@@ -256,7 +256,7 @@ CREATE TABLE `user_auth_token` (
 
 LOCK TABLES `user_auth_token` WRITE;
 /*!40000 ALTER TABLE `user_auth_token` DISABLE KEYS */;
-INSERT INTO `user_auth_token` VALUES ('0+Ht/OoXGWOHXTLkLxWPff+97Xgyo70zQmwWdFIWdfY=','2021-06-16 16:53:42.428000','2021-06-16 15:53:42.433000','EXPIRED',1),('0p1iilOOlNqSfqwhDFhMZb9wlXqsSekKynC9MzMF/p8=','2021-06-17 02:02:49.784000','2021-06-17 01:02:52.115000','EXPIRED',1),('1HEAebmPZuByKZJm3sQ2yKuzldANQxEAhzZvg28YAHo=','2021-06-17 02:33:20.764000','2021-06-17 01:33:20.796000','EXPIRED',1),('5YeZVk5IdP1D27e68CJRW90/CmpIZZVqLBX+OYvmvmY=','2021-06-17 02:03:31.466000','2021-06-17 01:03:32.184000','EXPIRED',1),('88faMr7LOjRbg4EL+aZ/2irmTMD63wQgo9d6eAEkcsQ=','2021-06-17 02:00:41.288000','2021-06-17 01:00:41.294000','EXPIRED',1);
+INSERT INTO `user_auth_token` VALUES ('7pLHBbeCGIsVAnOVODR7Ch3xV2Dj0fkPpLvVKmmpQvU=','VALID',1,'2021-06-17 15:24:08.606021','2021-06-17 14:24:08.616991'),('ROmtrT16sPDDe4pTe7LyAWlbiO0jiHm8vOaM38UP9N0=','VALID',1,'2021-06-17 15:25:30.214290','2021-06-17 14:25:30.218535'),('sSl6G7X//6YTuCnxPoHTlU6olVI9tZUQc3ff2Pyd0mg=','VALID',1,'2021-06-17 15:25:29.461528','2021-06-17 14:25:29.466525');
 /*!40000 ALTER TABLE `user_auth_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -304,4 +304,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-17  1:39:47
+-- Dump completed on 2021-06-17 14:28:42
