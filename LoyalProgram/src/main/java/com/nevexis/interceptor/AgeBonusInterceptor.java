@@ -1,5 +1,7 @@
 package com.nevexis.interceptor;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,8 +10,7 @@ import com.nevexis.services.ClientService;
 
 @Component("ageBonusInterceptor")
 public class AgeBonusInterceptor extends InterceptorImpl {
-	@Autowired
-	private ClientService clientService;
+	private ClientService clientService = new ClientService();
 
 	@Override
 	public void process(Sale sale) {
@@ -17,31 +18,31 @@ public class AgeBonusInterceptor extends InterceptorImpl {
 			return;
 		}
 		
-		Double discountPercentage = getDiscount(clientService.getClientAge(sale.getClient()));
+		BigDecimal discountPercentage = getDiscount(clientService.getClientAge(sale.getClient()));
 		
-		if(0 == discountPercentage.compareTo(0.0)) {
+		if(0 == discountPercentage.compareTo(BigDecimal.ZERO)) {
 			return;
 		}
 		
-		sale.setTotalDiscount(discountPercentage * sale.getPrice());
+		sale.setTotalDiscount(discountPercentage.multiply(sale.getPrice()));
 	}
 
-	private Double getDiscount(Integer age) {
+	private BigDecimal getDiscount(Integer age) {
 		if (null == age || 0 == age) {
-			return 0.0;
+			return BigDecimal.ZERO;
 		}
 		if (age < 3) {
-			return  0.50;
+			return  new BigDecimal(0.50);
 		}
 		if (age < 12) {
-			return  0.30;
+			return   new BigDecimal(0.30);
 		}
 		if (age < 26) {
-			return  0.10;
+			return   new BigDecimal(0.10);
 		}
 		if (age >= 60) {
-			return  0.60;
+			return   new BigDecimal(0.60);
 		}
-		return  0.0;
+		return  BigDecimal.ZERO;
 	}
 }

@@ -1,6 +1,6 @@
 package com.nevexis.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,15 +14,15 @@ public class UserAuthToken {
 	private String encryptedToken;
 	@OneToOne
 	private User user;
-	private Date expirationDate;
-	private Date issuedDate;
+	private LocalDateTime expirationDate;
+	private LocalDateTime issuedDate;
 	@Enumerated(EnumType.STRING)
 	private AuthStatus status;
 	
 	public UserAuthToken() {}
 	
 	
-	public UserAuthToken(String encryptedToken, User user, Date expirationDate, Date issuedDate, AuthStatus status) {
+	public UserAuthToken(String encryptedToken, User user, LocalDateTime expirationDate, LocalDateTime issuedDate, AuthStatus status) {
 		this.encryptedToken = encryptedToken;
 		this.user = user;
 		this.expirationDate = expirationDate;
@@ -56,22 +56,22 @@ public class UserAuthToken {
 	}
 
 
-	public Date getExpirationDate() {
+	public LocalDateTime getExpirationDate() {
 		return expirationDate;
 	}
 
 
-	public void setExpirationDate(Date expirationDate) {
+	public void setExpirationDate(LocalDateTime expirationDate) {
 		this.expirationDate = expirationDate;
 	}
 
 
-	public Date getIssuedDate() {
+	public LocalDateTime getIssuedDate() {
 		return issuedDate;
 	}
 
 
-	public void setIssuedDate(Date issuedDate) {
+	public void setIssuedDate(LocalDateTime issuedDate) {
 		this.issuedDate = issuedDate;
 	}
 }

@@ -1,19 +1,21 @@
 package com.nevexis.dtos;
 
+import java.math.BigDecimal;
+
 public class SaleDTO {
-	private Double price;
+	private BigDecimal price;
 
 	public SaleDTO() {}
 	
-	public SaleDTO(Double price) {
+	public SaleDTO(BigDecimal price) {
 		this.price = price;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 }

@@ -1,6 +1,6 @@
 package com.nevexis.services;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -20,8 +20,7 @@ public class ClientService extends BasicService {
 		return em.createNamedQuery(getClientByPhone, Client.class).setParameter("phone", phoneNumber).getSingleResult();
 	}
 
-	@SuppressWarnings("deprecation")
 	public int getClientAge(Client client) {
-		return new Date(System.currentTimeMillis()).getYear() - client.getBirthdate().getYear();
+		return LocalDateTime.now().getYear() - client.getBirthdate().getYear();
 	}
 }

@@ -1,6 +1,6 @@
 package com.nevexis.models;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -14,14 +14,14 @@ public class Client extends BaseEntity{
 	private String firstName;
 	private String lastName;
 	private String phone;
-	private Date birthdate;
+	private LocalDateTime birthdate;
 	
 	@ManyToOne
 	private LoyalCard loyalCard;
 
 	public Client() {}
 	
-	public Client(String firstName, String lastName, String phone, Date birthdate, LoyalCard loyalCard) {
+	public Client(String firstName, String lastName, String phone, LocalDateTime birthdate, LoyalCard loyalCard) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phone = phone;
@@ -53,11 +53,11 @@ public class Client extends BaseEntity{
 		this.phone = phone;
 	}
 
-	public Date getBirthdate() {
+	public LocalDateTime getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(Date birthdate) {
+	public void setBirthdate(LocalDateTime birthdate) {
 		this.birthdate = birthdate;
 	}
 

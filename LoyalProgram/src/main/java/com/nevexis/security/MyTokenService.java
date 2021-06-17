@@ -5,9 +5,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,23 +24,23 @@ public class MyTokenService extends BasicService {
 
 	private static final String SECURE_KEY = "KenanSecurity";
 	private static final String SPLITTER = "&@";
-	private static final long EXPIRATION_MS = 3_600_000l;
+	private static final long EXPIRE_AFTER_HOURS = 1;
 	private static final SecureRandom random = new SecureRandom();
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	//SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	public String generateToken(String username) {
-		Date expirationDate = new Date((new Date()).getTime() + EXPIRATION_MS);
+		LocalDateTime expirationDate = LocalDateTime.now().plusHours(EXPIRE_AFTER_HOURS);
 
 		StringBuffer buffer = new StringBuffer(50);
 		buffer.append(SECURE_KEY).append(SPLITTER).append(username).append(SPLITTER)
-				.append(formatter.format(expirationDate)).append(SPLITTER).append(random.nextLong());
+				.append(expirationDate).append(SPLITTER).append(random.nextLong());
 
 		return buffer.toString();
 	}
 
 	public boolean validateToken(String token) throws ParseException {
 		if (StringUtils.hasText(token) && token.startsWith(SECURE_KEY)) {
-			if (extractExpirationDate(token).after(new Date()) && tokenExistsInDb(token)) {
+			if (extractExpirationDate(token).isAfter(LocalDateTime.now()) && tokenExistsInDb(token)) {
 				return true;
 			} else {
 				setTokenExpired(token);
@@ -66,8 +65,8 @@ public class MyTokenService extends BasicService {
 		return token.split(SPLITTER)[1];
 	}
 
-	public Date extractExpirationDate(String token) throws ParseException {
-		return formatter.parse(token.split(SPLITTER)[2]);
+	public LocalDateTime extractExpirationDate(String token) throws ParseException {
+		return LocalDateTime.parse(token.split(SPLITTER)[2]);
 	}
 
 	public Long extractSecureKey(String token) {
@@ -89,7 +88,7 @@ public class MyTokenService extends BasicService {
 
 	public void persistToken(String token) throws ParseException {
 		UserAuthToken userAuthToken = new UserAuthToken(encryptToken(token),
-				userService.getUserByUsername(extractUsernameFromToken(token)), extractExpirationDate(token), new Date(), AuthStatus.VALID);
+				userService.getUserByUsername(extractUsernameFromToken(token)), extractExpirationDate(token), LocalDateTime.now(), AuthStatus.VALID);
 		em.persist(userAuthToken);
 	}
 }

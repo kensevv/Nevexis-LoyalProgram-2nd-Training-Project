@@ -15,7 +15,7 @@ public class TestController {
 	@GetMapping("/permission")
 	@PreAuthorize("hasAuthority('READ')")
 	public String helloPermission() {
-		return "YOU HAVE READ PERMISSION";
+		return "you have READ permission";
 	}
 	
 	@GetMapping("/admin")

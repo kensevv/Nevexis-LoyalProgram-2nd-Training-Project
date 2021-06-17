@@ -1,28 +1,32 @@
 package com.nevexis.models;
 
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Entity
 public class LoyalCard extends BaseEntity{
-	private Double points;
+	@Column(precision=10, scale=2)
+	private BigDecimal points;
 
 	@Enumerated(EnumType.STRING)
 	private CardTier tier;
 	
 	public LoyalCard() {}
 	
-	public LoyalCard(Double points, CardTier tier) {
+	public LoyalCard(BigDecimal points, CardTier tier) {
 		this.points = points;
 		this.tier = tier;
 	}
 
-	public Double getPoints() {
+	public BigDecimal getPoints() {
 		return points;
 	}
 
-	public void setPoints(Double points) {
+	public void setPoints(BigDecimal points) {
 		this.points = points;
 	}
 

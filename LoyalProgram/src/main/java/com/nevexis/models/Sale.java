@@ -1,7 +1,9 @@
 package com.nevexis.models;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -9,24 +11,32 @@ import javax.persistence.ManyToOne;
 public class Sale extends BaseEntity{
 	@ManyToOne
 	private Client client;
-	private Date date;
-	private Double price;
-	private Double totalDiscount;
-	private Double receivedPoints;
-	private Double usedPoints;
+	
+	private LocalDateTime date;
+	
+	@Column(precision=10, scale=2)
+	private BigDecimal price;
+	
+	@Column(precision=10, scale=2)
+	private BigDecimal totalDiscount;
+	
+	@Column(precision=10, scale=2)
+	private BigDecimal receivedPoints;
+	
+	@Column(precision=10, scale=2)
+	private BigDecimal usedPoints;
 	
 	public Sale() {}
 	
-	public Sale(Client client, Date date, Double price, Double totalDiscount) {
+	public Sale(Client client, LocalDateTime date, BigDecimal price, BigDecimal totalDiscount) {
 		this.client = client;
 		this.date = date;
 		this.price = price;
 		this.totalDiscount = totalDiscount;
 	}
 
-	
-	public Sale(Client client, Date date, Double price, Double totalDiscount, Double receivedPoints,
-			Double usedPoints) {
+	public Sale(Client client, LocalDateTime date, BigDecimal price, BigDecimal totalDiscount, BigDecimal receivedPoints,
+			BigDecimal usedPoints) {
 		this.client = client;
 		this.date = date;
 		this.price = price;
@@ -43,44 +53,43 @@ public class Sale extends BaseEntity{
 		this.client = client;
 	}
 
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 
-	public Double getTotalDiscount() {
+	public BigDecimal getTotalDiscount() {
 		return totalDiscount;
 	}
 
-	public void setTotalDiscount(Double totalDiscount) {
+	public void setTotalDiscount(BigDecimal totalDiscount) {
 		this.totalDiscount = totalDiscount;
 	}
 
-	public Double getReceivedPoints() {
+	public BigDecimal getReceivedPoints() {
 		return receivedPoints;
 	}
 
-	public void setReceivedPoints(Double receivedPoints) {
+	public void setReceivedPoints(BigDecimal receivedPoints) {
 		this.receivedPoints = receivedPoints;
 	}
 
-	public Double getUsedPoints() {
+	public BigDecimal getUsedPoints() {
 		return usedPoints;
 	}
 
-	public void setUsedPoints(Double usedPoints) {
+	public void setUsedPoints(BigDecimal usedPoints) {
 		this.usedPoints = usedPoints;
 	}
-	
 }

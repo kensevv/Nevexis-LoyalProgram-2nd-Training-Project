@@ -1,55 +1,48 @@
 package com.nevexis.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.nevexis.dtos.SaleDTO;
-import com.nevexis.interceptor.AddPointsInterceptor;
-import com.nevexis.interceptor.AgeBonusInterceptor;
 import com.nevexis.interceptor.InterceptorChainImpl;
-import com.nevexis.interceptor.UsePointsInterceptor;
 import com.nevexis.models.Sale;
 
 @Service
 public class SalesService extends BasicService {
 	@Autowired
-	@Qualifier("ageBonusInterceptor")
-	private AgeBonusInterceptor ageBonusInterceptor;
-	@Autowired
-	@Qualifier("addPointsInterceptor")
-	private AddPointsInterceptor addPointsInterceptor;
-	@Autowired
-	@Qualifier("usePointsInterceptor")
-	private UsePointsInterceptor usePointsInterceptor;
+	@Qualifier("usePointsInterceptorChain")
+	private InterceptorChainImpl usePointsChain;
 	
 	@Autowired
-	ClientService clientService;
-
+	@Qualifier("dontUsePointsInterceptorChain")
+	private InterceptorChainImpl dontUsePointsChain;
+	
+	@Autowired
+	private ClientService clientService;
+	
 	public Sale makesale(String clientPhoneNumber, SaleDTO saleDTO, Boolean usePoints) {
 		Sale sale = new Sale(clientService.getCLientByPhone(clientPhoneNumber),
-				new java.sql.Date(System.currentTimeMillis()), saleDTO.getPrice(), null);
+				LocalDateTime.now(), saleDTO.getPrice(), null);
 
-		InterceptorChainImpl interceptorChain;
 		if(usePoints == true) {
-			interceptorChain = new InterceptorChainImpl(ageBonusInterceptor, addPointsInterceptor, usePointsInterceptor);
+			usePointsChain.invoke(sale);
 		}
 		else {
-			interceptorChain = new InterceptorChainImpl(ageBonusInterceptor, addPointsInterceptor);
-			sale.setUsedPoints(0.0);
+			dontUsePointsChain.invoke(sale);
+			sale.setUsedPoints(BigDecimal.ZERO);
 		}
-		interceptorChain.invoke(sale);
-		
-		// ageBonusInterceptor.invoke(sale);
-		// addPointsInterceptor.invoke(sale);
 		
 		em.persist(sale);
 		return sale;
 	}
 
-	public Double getFinalPrice(Sale sale) {
+	public BigDecimal getFinalPrice(Sale sale) {
 		if (null != sale && null != sale.getTotalDiscount()) {
-			return sale.getPrice() - sale.getTotalDiscount();
+			return sale.getPrice().subtract(sale.getTotalDiscount());
 		}
 		return sale.getPrice();
 	}
