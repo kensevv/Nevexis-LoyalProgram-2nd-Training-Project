@@ -10,10 +10,8 @@ import com.nevexis.security.UserDetailsImpl;
 @Service
 @Transactional
 public class UserService extends BasicService {
-	private static final String getUserByUsername = "User.getUserByUsername";
-
 	public User getUserByUsername(String username) {
-		return em.createNamedQuery(getUserByUsername, User.class).setParameter("username", username).getSingleResult();
+		return em.createNamedQuery(User.getUserByUsername, User.class).setParameter("username", username).getSingleResult();
 	}
 
 	public void incrementFailedAttempts(UserDetailsImpl userDetails) {

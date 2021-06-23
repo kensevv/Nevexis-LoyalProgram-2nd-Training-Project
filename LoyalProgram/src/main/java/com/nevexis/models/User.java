@@ -12,8 +12,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(name = "User.getUserByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
+@NamedQuery(name = User.getUserByUsername, query = "SELECT u FROM User u WHERE u.username = :username")
 public class User extends BaseEntity{
+	public static final String getUserByUsername = "getUserByUsername";
+	
 	@Column(unique = true, nullable = false)
 	private String email;
 	@Column(unique = true, nullable = false)
