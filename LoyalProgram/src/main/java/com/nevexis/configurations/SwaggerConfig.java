@@ -1,4 +1,4 @@
-package com.nevexis;
+package com.nevexis.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
