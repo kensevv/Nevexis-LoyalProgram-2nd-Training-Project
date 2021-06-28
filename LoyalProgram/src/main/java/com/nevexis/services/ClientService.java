@@ -20,6 +20,24 @@ import com.nevexis.models.LoyalCard;
 
 @Service
 public class ClientService extends BasicService {
+	// CRITERIA BUILDER API
+	public List<Client> getClientsByTier(CardTier tier) {
+
+		CriteriaBuilder critBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<Client> critQuery = critBuilder.createQuery(Client.class);
+
+		Root<Client> client = critQuery.from(Client.class);
+
+		Join<Client, LoyalCard> clientCards = client.join("loyalCard", JoinType.INNER);
+
+		Predicate tierMatches = critBuilder.equal(clientCards.get("tier"), tier);
+
+		critQuery.where(tierMatches);
+
+		TypedQuery<Client> query = em.createQuery(critQuery);
+		return query.setMaxResults(100).getResultStream()
+				.sorted((c1, c2) -> c1.getFirstName().compareTo(c2.getFirstName())).collect(Collectors.toList());
+	}
 
 	public List<Client> getAllClients() {
 		return em.createNamedQuery(Client.getAllClients, Client.class).setMaxResults(100).getResultList();
@@ -34,22 +52,4 @@ public class ClientService extends BasicService {
 		return LocalDateTime.now().getYear() - client.getBirthdate().getYear();
 	}
 
-	//CRITERIA BUILDER API
-	public List<Client> getClientsByTier(CardTier tier) {
-		
-		CriteriaBuilder critBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<Client> critQuery = critBuilder.createQuery(Client.class);
-
-		Root<Client> client = critQuery.from(Client.class);
-
-		Join<Client, LoyalCard> clientCards = client.join("loyalCard", JoinType.INNER);
-
-		Predicate tierMatches = critBuilder.equal(clientCards.get("tier"), tier);
-		critQuery.where(tierMatches);
-
-		TypedQuery<Client> query = em.createQuery(critQuery);
-		return query.setMaxResults(100).getResultStream()
-				.sorted((c1, c2) -> c1.getFirstName().compareTo(c2.getFirstName())).collect(Collectors.toList());
-	}
-	
 }
